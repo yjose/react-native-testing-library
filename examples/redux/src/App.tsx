@@ -6,6 +6,7 @@ import { CounterScreen } from './feature/counter/CounterScreen';
 const App = () => {
   return (
     <Provider store={store}>
+      <CounterScreen />
     </Provider>
   );
 };
