@@ -102,7 +102,7 @@ const getEventHandler = (
   return undefined;
 };
 
-const invokeEvent = (
+export const invokeEvent = (
   element: ReactTestInstance,
   eventName: string,
   callsite?: any,
