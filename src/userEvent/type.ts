@@ -6,6 +6,7 @@ import {
   buildChangeEvent,
   buildFocusEvent,
   buildKeyPressEvent,
+  buildSelectionChangeEvent,
   buildTextInputEvent,
 } from './event-builders';
 
@@ -43,7 +44,12 @@ export async function type(
     );
     invokeEvent(element, 'change', undefined, buildChangeEvent(currentText));
     invokeEvent(element, 'changeText', undefined, currentText);
-    invokeEvent(element, 'selectionChange', undefined, key);
+    invokeEvent(
+      element,
+      'selectionChange',
+      undefined,
+      buildSelectionChangeEvent(currentText.length, currentText.length)
+    );
   }
 
   // TODO: check if submitEditing in necessary

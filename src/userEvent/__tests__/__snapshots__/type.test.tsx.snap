@@ -49,6 +49,10 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
     "name": "textInput",
     "nativeEvent": {
       "previousText": "",
+      "range": {
+        "end": 0,
+        "start": 0,
+      },
       "text": "H",
     },
   },
@@ -67,7 +71,12 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
   {
     "id": 7,
     "name": "selectionChange",
-    "nativeEvent": undefined,
+    "nativeEvent": {
+      "selection": {
+        "end": 1,
+        "start": 1,
+      },
+    },
   },
   {
     "id": 8,
@@ -81,6 +90,10 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
     "name": "textInput",
     "nativeEvent": {
       "previousText": "H",
+      "range": {
+        "end": 1,
+        "start": 1,
+      },
       "text": "He",
     },
   },
@@ -99,7 +112,12 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
   {
     "id": 12,
     "name": "selectionChange",
-    "nativeEvent": undefined,
+    "nativeEvent": {
+      "selection": {
+        "end": 2,
+        "start": 2,
+      },
+    },
   },
   {
     "id": 13,
@@ -113,6 +131,10 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
     "name": "textInput",
     "nativeEvent": {
       "previousText": "He",
+      "range": {
+        "end": 2,
+        "start": 2,
+      },
       "text": "Hel",
     },
   },
@@ -131,7 +153,12 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
   {
     "id": 17,
     "name": "selectionChange",
-    "nativeEvent": undefined,
+    "nativeEvent": {
+      "selection": {
+        "end": 3,
+        "start": 3,
+      },
+    },
   },
   {
     "id": 18,
@@ -145,6 +172,10 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
     "name": "textInput",
     "nativeEvent": {
       "previousText": "Hel",
+      "range": {
+        "end": 3,
+        "start": 3,
+      },
       "text": "Hell",
     },
   },
@@ -163,7 +194,12 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
   {
     "id": 22,
     "name": "selectionChange",
-    "nativeEvent": undefined,
+    "nativeEvent": {
+      "selection": {
+        "end": 4,
+        "start": 4,
+      },
+    },
   },
   {
     "id": 23,
@@ -177,6 +213,10 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
     "name": "textInput",
     "nativeEvent": {
       "previousText": "Hell",
+      "range": {
+        "end": 4,
+        "start": 4,
+      },
       "text": "Hello",
     },
   },
@@ -195,7 +235,12 @@ exports[`userEvent.type on TextInput: typing events 1`] = `
   {
     "id": 27,
     "name": "selectionChange",
-    "nativeEvent": undefined,
+    "nativeEvent": {
+      "selection": {
+        "end": 5,
+        "start": 5,
+      },
+    },
   },
 ]
 `;

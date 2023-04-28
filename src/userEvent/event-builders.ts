@@ -49,6 +49,25 @@ export function buildChangeEvent(text: string) {
  */
 export function buildTextInputEvent(text: string, previousText: string) {
   return {
-    nativeEvent: { text, previousText },
+    nativeEvent: {
+      text,
+      previousText,
+      range: buildRangeFromText(previousText),
+    },
   };
+}
+
+/**
+ * Experimental values:
+ * - iOS: `{"selection": {"end": 4, "start": 4}, "target": 75}`
+ * - Android: `{"selection": {"end": 4, "start": 4}}`
+ */
+export function buildSelectionChangeEvent(start: number, end: number) {
+  return {
+    nativeEvent: { selection: { start, end } },
+  };
+}
+
+export function buildRangeFromText(text: string) {
+  return { start: text.length, end: text.length };
 }
