@@ -24,11 +24,8 @@ export async function type(
   await wait();
   invokeEvent(element, 'pressIn');
 
-  // TODO support exisiting text
   await wait();
   invokeEvent(element, 'focus', undefined, buildFocusEvent());
-
-  await wait();
   invokeEvent(element, 'pressOut');
 
   let currentText = initialText;
