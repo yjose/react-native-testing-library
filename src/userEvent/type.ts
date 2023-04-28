@@ -1,6 +1,13 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { invokeEvent } from '../fireEvent';
 import { wait } from './wait';
+import {
+  buildBlurEvent,
+  buildChangeEvent,
+  buildFocusEvent,
+  buildKeyPressEvent,
+  buildTextInputEvent,
+} from './event-builders';
 
 interface TypeOptions {
   skipPress?: boolean;
@@ -11,6 +18,7 @@ export async function type(
   text: string,
   options?: TypeOptions
 ): Promise<void> {
+  const initialText = element.props.value ?? element.props.defaultValue ?? '';
   const keys = parseKeys(text);
 
   await wait();
@@ -18,19 +26,27 @@ export async function type(
 
   // TODO support exisiting text
   await wait();
-  invokeEvent(element, 'focus', undefined, buildFocusEvent(''));
+  invokeEvent(element, 'focus', undefined, buildFocusEvent());
 
   await wait();
   invokeEvent(element, 'pressOut');
 
+  let currentText = initialText;
   for (const key of keys) {
+    const previousText = currentText;
+    currentText += key;
+
     await wait();
     invokeEvent(element, 'keyPress', undefined, buildKeyPressEvent(key));
-    invokeEvent(element, 'textInput', key);
-    invokeEvent(element, 'change', key);
-    invokeEvent(element, 'changeText', key);
-    invokeEvent(element, 'selectionChange', key);
-    invokeEvent(element, 'contentSizeChange', key);
+    invokeEvent(
+      element,
+      'textInput',
+      undefined,
+      buildTextInputEvent(currentText, previousText)
+    );
+    invokeEvent(element, 'change', undefined, buildChangeEvent(currentText));
+    invokeEvent(element, 'changeText', undefined, currentText);
+    invokeEvent(element, 'selectionChange', undefined, key);
   }
 
   // TODO: check if submitEditing in necessary
@@ -38,25 +54,9 @@ export async function type(
   invokeEvent(element, 'submitEditing');
 
   await wait();
-  invokeEvent(element, 'blur', buildFocusEvent(text));
+  invokeEvent(element, 'blur', buildBlurEvent());
 }
 
-function parseKeys(text: string) {
+export function parseKeys(text: string) {
   return text.split('');
-}
-
-function buildFocusEvent(text: string) {
-  return {
-    nativeEvent: {
-      text,
-    },
-  };
-}
-
-function buildKeyPressEvent(key: string) {
-  return {
-    nativeEvent: {
-      key,
-    },
-  };
 }

@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`userEvent.type on TextInput: entry events 1`] = `
+[
+  {
+    "id": 0,
+    "name": "pressIn",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 1,
+    "name": "focus",
+    "nativeEvent": {},
+  },
+  {
+    "id": 2,
+    "name": "pressOut",
+    "nativeEvent": undefined,
+  },
+]
+`;
+
+exports[`userEvent.type on TextInput: exit events 1`] = `
+[
+  {
+    "id": 28,
+    "name": "onSubmitEditing",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 29,
+    "name": "blur",
+    "nativeEvent": undefined,
+  },
+]
+`;
+
+exports[`userEvent.type on TextInput: typing events 1`] = `
+[
+  {
+    "id": 3,
+    "name": "keyPress",
+    "nativeEvent": {
+      "key": "H",
+    },
+  },
+  {
+    "id": 4,
+    "name": "textInput",
+    "nativeEvent": {
+      "previousText": "",
+      "text": "H",
+    },
+  },
+  {
+    "id": 5,
+    "name": "change",
+    "nativeEvent": {
+      "text": "H",
+    },
+  },
+  {
+    "id": 6,
+    "name": "changeText",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 7,
+    "name": "selectionChange",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 8,
+    "name": "keyPress",
+    "nativeEvent": {
+      "key": "e",
+    },
+  },
+  {
+    "id": 9,
+    "name": "textInput",
+    "nativeEvent": {
+      "previousText": "H",
+      "text": "He",
+    },
+  },
+  {
+    "id": 10,
+    "name": "change",
+    "nativeEvent": {
+      "text": "He",
+    },
+  },
+  {
+    "id": 11,
+    "name": "changeText",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 12,
+    "name": "selectionChange",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 13,
+    "name": "keyPress",
+    "nativeEvent": {
+      "key": "l",
+    },
+  },
+  {
+    "id": 14,
+    "name": "textInput",
+    "nativeEvent": {
+      "previousText": "He",
+      "text": "Hel",
+    },
+  },
+  {
+    "id": 15,
+    "name": "change",
+    "nativeEvent": {
+      "text": "Hel",
+    },
+  },
+  {
+    "id": 16,
+    "name": "changeText",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 17,
+    "name": "selectionChange",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 18,
+    "name": "keyPress",
+    "nativeEvent": {
+      "key": "l",
+    },
+  },
+  {
+    "id": 19,
+    "name": "textInput",
+    "nativeEvent": {
+      "previousText": "Hel",
+      "text": "Hell",
+    },
+  },
+  {
+    "id": 20,
+    "name": "change",
+    "nativeEvent": {
+      "text": "Hell",
+    },
+  },
+  {
+    "id": 21,
+    "name": "changeText",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 22,
+    "name": "selectionChange",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 23,
+    "name": "keyPress",
+    "nativeEvent": {
+      "key": "o",
+    },
+  },
+  {
+    "id": 24,
+    "name": "textInput",
+    "nativeEvent": {
+      "previousText": "Hell",
+      "text": "Hello",
+    },
+  },
+  {
+    "id": 25,
+    "name": "change",
+    "nativeEvent": {
+      "text": "Hello",
+    },
+  },
+  {
+    "id": 26,
+    "name": "changeText",
+    "nativeEvent": undefined,
+  },
+  {
+    "id": 27,
+    "name": "selectionChange",
+    "nativeEvent": undefined,
+  },
+]
+`;
