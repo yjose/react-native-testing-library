@@ -7,7 +7,9 @@ import {
   buildFocusEvent,
   buildKeyPressEvent,
   buildSelectionChangeEvent,
+  buildSubmitEditingEvent,
   buildTextInputEvent,
+  buildTouchEvent,
 } from './event-builders';
 
 interface TypeOptions {
@@ -22,12 +24,17 @@ export async function type(
   const initialText = element.props.value ?? element.props.defaultValue ?? '';
   const keys = parseKeys(text);
 
-  await wait();
-  invokeEvent(element, 'pressIn');
+  if (options?.skipPress !== true) {
+    await wait();
+    invokeEvent(element, 'pressIn', undefined, buildTouchEvent());
+  }
 
   await wait();
   invokeEvent(element, 'focus', undefined, buildFocusEvent());
-  invokeEvent(element, 'pressOut');
+
+  if (options?.skipPress !== true) {
+    invokeEvent(element, 'pressOut', undefined, buildTouchEvent());
+  }
 
   let currentText = initialText;
   for (const key of keys) {
@@ -54,10 +61,15 @@ export async function type(
 
   // TODO: check if submitEditing in necessary
   await wait();
-  invokeEvent(element, 'submitEditing');
+  invokeEvent(
+    element,
+    'submitEditing',
+    undefined,
+    buildSubmitEditingEvent(currentText)
+  );
 
   await wait();
-  invokeEvent(element, 'blur', buildBlurEvent());
+  invokeEvent(element, 'blur', undefined, buildBlurEvent());
 }
 
 export function parseKeys(text: string) {
