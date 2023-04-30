@@ -5,22 +5,26 @@ import { render } from '../..';
 import { userEvent } from '..';
 
 interface ManagedTextInputProps {
+  valueTransformer?: (text: string) => string;
   handleEvent: (name: string) => (event: any) => void;
-  fixedValue?: string;
 }
 
-function ManagedTextInput({ handleEvent, fixedValue }: ManagedTextInputProps) {
+function ManagedTextInput({
+  handleEvent,
+  valueTransformer,
+}: ManagedTextInputProps) {
   const [value, setValue] = React.useState('');
 
   const handleChangeText = (text: string) => {
     handleEvent('changeText')(text);
-    setValue(text);
+    const newValue = valueTransformer?.(text) ?? text;
+    setValue(newValue);
   };
 
   return (
     <TextInput
       testID="input"
-      value={fixedValue ?? value}
+      value={value}
       onChangeText={handleChangeText}
       onFocus={handleEvent('focus')}
       onBlur={handleEvent('blur')}
@@ -30,7 +34,7 @@ function ManagedTextInput({ handleEvent, fixedValue }: ManagedTextInputProps) {
       onTextInput={handleEvent('textInput')}
       onKeyPress={handleEvent('keyPress')}
       onSelectionChange={handleEvent('selectionChange')}
-      onSubmitEditing={handleEvent('onSubmitEditing')}
+      onSubmitEditing={handleEvent('submitEditing')}
       onContentSizeChange={handleEvent('contentSizeChange')}
     />
   );
@@ -39,33 +43,70 @@ function ManagedTextInput({ handleEvent, fixedValue }: ManagedTextInputProps) {
 test('userEvent.type on TextInput', async () => {
   const { events, handleEvent } = createEventToolkit();
   const screen = render(<ManagedTextInput handleEvent={handleEvent} />);
-  await userEvent.type(screen.getByTestId('input'), 'Hello');
 
-  const entryEvents = events.slice(0, 3);
-  const exitEvents = events.slice(events.length - 2);
-  const typingEvents = events.slice(
-    entryEvents.length,
-    events.length - exitEvents.length
-  );
+  await userEvent.type(screen.getByTestId('input'), 'Wow');
 
-  expect(entryEvents).toMatchSnapshot('entry events');
-  expect(typingEvents).toMatchSnapshot('typing events');
-  expect(exitEvents).toMatchSnapshot('exit events');
+  const eventNames = events.map((e) => e.name);
+  expect(eventNames).toEqual([
+    'pressIn',
+    'focus',
+    'pressOut',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'endEditing',
+    'blur',
+  ]);
+
+  // TODO: inspect details
 });
 
 test('userEvent.type on rejecting TextInput', async () => {
   const { events, handleEvent } = createEventToolkit();
-  const screen = render(<ManagedTextInput handleEvent={handleEvent} />);
-  await userEvent.type(screen.getByTestId('input'), 'Hello');
-
-  const entryEvents = events.slice(0, 3);
-  const exitEvents = events.slice(events.length - 2);
-  const typingEvents = events.slice(
-    entryEvents.length,
-    events.length - exitEvents.length
+  const screen = render(
+    <ManagedTextInput
+      handleEvent={handleEvent}
+      valueTransformer={() => 'No Change'}
+    />
   );
 
-  expect(entryEvents).toMatchSnapshot('entry events');
-  expect(typingEvents).toMatchSnapshot('typing events');
-  expect(exitEvents).toMatchSnapshot('exit events');
+  await userEvent.type(screen.getByTestId('input'), 'FTW');
+
+  const eventNames = events.map((e) => e.name);
+  expect(eventNames).toEqual([
+    'pressIn',
+    'focus',
+    'pressOut',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'endEditing',
+    'blur',
+  ]);
+
+  expect(events[3]).toMatchInlineSnapshot();
 });

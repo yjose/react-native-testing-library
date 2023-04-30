@@ -1,19 +1,11 @@
 import { ReactTestInstance } from 'react-test-renderer';
 import { invokeEvent } from '../fireEvent';
 import { wait } from './wait';
-import {
-  buildBlurEvent,
-  buildChangeEvent,
-  buildFocusEvent,
-  buildKeyPressEvent,
-  buildSelectionChangeEvent,
-  buildSubmitEditingEvent,
-  buildTextInputEvent,
-  buildTouchEvent,
-} from './event-builders';
+import { EventBuilder } from './event-builder';
 
 interface TypeOptions {
   skipPress?: boolean;
+  submitEditing?: boolean;
 }
 
 export async function type(
@@ -26,14 +18,14 @@ export async function type(
 
   if (options?.skipPress !== true) {
     await wait();
-    invokeEvent(element, 'pressIn', undefined, buildTouchEvent());
+    invokeEvent(element, 'pressIn', type, EventBuilder.Common.touch());
   }
 
   await wait();
-  invokeEvent(element, 'focus', undefined, buildFocusEvent());
+  invokeEvent(element, 'focus', type, EventBuilder.Common.focus());
 
   if (options?.skipPress !== true) {
-    invokeEvent(element, 'pressOut', undefined, buildTouchEvent());
+    invokeEvent(element, 'pressOut', type, EventBuilder.Common.touch());
   }
 
   let currentText = initialText;
@@ -42,34 +34,54 @@ export async function type(
     currentText += key;
 
     await wait();
-    invokeEvent(element, 'keyPress', undefined, buildKeyPressEvent(key));
+    invokeEvent(
+      element,
+      'keyPress',
+      type,
+      EventBuilder.TextInput.keyPress(key)
+    );
     invokeEvent(
       element,
       'textInput',
-      undefined,
-      buildTextInputEvent(currentText, previousText)
+      type,
+      EventBuilder.TextInput.textInput(currentText, previousText)
     );
-    invokeEvent(element, 'change', undefined, buildChangeEvent(currentText));
-    invokeEvent(element, 'changeText', undefined, currentText);
+    invokeEvent(
+      element,
+      'change',
+      type,
+      EventBuilder.TextInput.change(currentText)
+    );
+    invokeEvent(element, 'changeText', type, currentText);
     invokeEvent(
       element,
       'selectionChange',
-      undefined,
-      buildSelectionChangeEvent(currentText.length, currentText.length)
+      type,
+      EventBuilder.TextInput.selectionChange(
+        currentText.length,
+        currentText.length
+      )
     );
   }
 
-  // TODO: check if submitEditing in necessary
+  if (options?.submitEditing === true) {
+    await wait();
+    invokeEvent(
+      element,
+      'submitEditing',
+      type,
+      EventBuilder.TextInput.submitEditing(currentText)
+    );
+  }
+
   await wait();
   invokeEvent(
     element,
-    'submitEditing',
-    undefined,
-    buildSubmitEditingEvent(currentText)
+    'endEditing',
+    type,
+    EventBuilder.TextInput.endEditing(currentText)
   );
-
-  await wait();
-  invokeEvent(element, 'blur', undefined, buildBlurEvent());
+  invokeEvent(element, 'blur', undefined, EventBuilder.Common.blur());
 }
 
 export function parseKeys(text: string) {

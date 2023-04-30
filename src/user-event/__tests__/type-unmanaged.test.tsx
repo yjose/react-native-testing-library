@@ -19,7 +19,7 @@ function renderTextInputWithToolkit() {
       onTextInput={handleEvent('textInput')}
       onKeyPress={handleEvent('keyPress')}
       onSelectionChange={handleEvent('selectionChange')}
-      onSubmitEditing={handleEvent('onSubmitEditing')}
+      onSubmitEditing={handleEvent('submitEditing')}
       onContentSizeChange={handleEvent('contentSizeChange')}
     />
   );
@@ -33,7 +33,7 @@ function renderTextInputWithToolkit() {
 test('userEvent.type on TextInput', async () => {
   const { events, ...queries } = renderTextInputWithToolkit();
 
-  await userEvent.type(queries.getByTestId('input'), 'ABC');
+  await userEvent.type(queries.getByTestId('input'), 'abc');
 
   const eventNames = events.map((e) => e.name);
   expect(eventNames).toEqual([
@@ -55,30 +55,59 @@ test('userEvent.type on TextInput', async () => {
     'change',
     'changeText',
     'selectionChange',
-    'onSubmitEditing',
+    'endEditing',
     'blur',
   ]);
 
-  const entryEvents = events.slice(0, 3);
-  const exitEvents = events.slice(events.length - 2);
-  const typingEvents = events.slice(
-    entryEvents.length,
-    events.length - exitEvents.length
-  );
-
-  expect(entryEvents).toMatchSnapshot('entry events');
-  expect(typingEvents).toMatchSnapshot('typing events');
-  expect(exitEvents).toMatchSnapshot('exit events');
+  // TODO: inspect details
 });
 
 test('userEvent.type skips press events when `skipPress: true`', async () => {
   const { events, ...queries } = renderTextInputWithToolkit();
-  await userEvent.type(queries.getByTestId('input'), 'abc', {
+  await userEvent.type(queries.getByTestId('input'), 'a', {
     skipPress: true,
   });
 
   const eventNames = events.map((e) => e.name);
   expect(eventNames).not.toContainEqual('pressIn');
   expect(eventNames).not.toContainEqual('pressOut');
-  expect(events).toMatchSnapshot('events without press events');
+  expect(eventNames).toEqual([
+    'focus',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'endEditing',
+    'blur',
+  ]);
+
+  // TODO: inspect details
+});
+
+test('userEvent.type triggers submit event with `submitEditing: true`', async () => {
+  const { events, ...queries } = renderTextInputWithToolkit();
+  await userEvent.type(queries.getByTestId('input'), 'a', {
+    submitEditing: true,
+  });
+
+  const eventNames = events.map((e) => e.name);
+  expect(eventNames).toEqual([
+    'pressIn',
+    'focus',
+    'pressOut',
+    'keyPress',
+    'textInput',
+    'change',
+    'changeText',
+    'selectionChange',
+    'submitEditing',
+    'endEditing',
+    'blur',
+  ]);
+
+  expect(events[8].nativeEvent).toEqual({
+    text: 'a',
+    target: expect.any(Number),
+  });
 });
