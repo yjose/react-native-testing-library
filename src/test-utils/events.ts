@@ -1,21 +1,23 @@
 interface EventEntry {
-  id: number;
   name: string;
   nativeEvent: any;
+  event?: any;
 }
 
 export function createEventToolkit() {
-  let id = 0;
   const events: EventEntry[] = [];
   const handleEvent = (name: string) => {
     return (event: any) => {
-      events.push({
-        id,
+      const eventEntry: EventEntry = {
         name,
         nativeEvent: event?.nativeEvent,
-      });
+      };
 
-      id += 1;
+      if (!eventEntry?.nativeEvent) {
+        eventEntry.event = event;
+      }
+
+      events.push(eventEntry);
     };
   };
 

@@ -13,7 +13,6 @@ export async function type(
   text: string,
   options?: TypeOptions
 ): Promise<void> {
-  const initialText = element.props.value ?? element.props.defaultValue ?? '';
   const keys = parseKeys(text);
 
   if (options?.skipPress !== true) {
@@ -28,41 +27,15 @@ export async function type(
     invokeEvent(element, 'pressOut', type, EventBuilder.Common.touch());
   }
 
-  let currentText = initialText;
+  let currentText = '';
   for (const key of keys) {
-    const previousText = currentText;
-    currentText += key;
+    const initialText = getManagedText(element) ?? currentText;
+    currentText = initialText + key;
 
-    await wait();
-    invokeEvent(
-      element,
-      'keyPress',
-      type,
-      EventBuilder.TextInput.keyPress(key)
-    );
-    invokeEvent(
-      element,
-      'textInput',
-      type,
-      EventBuilder.TextInput.textInput(currentText, previousText)
-    );
-    invokeEvent(
-      element,
-      'change',
-      type,
-      EventBuilder.TextInput.change(currentText)
-    );
-    invokeEvent(element, 'changeText', type, currentText);
-    invokeEvent(
-      element,
-      'selectionChange',
-      type,
-      EventBuilder.TextInput.selectionChange(
-        currentText.length,
-        currentText.length
-      )
-    );
+    emitSingleLineTypingEvents(element, key, currentText);
   }
+
+  const finalText = getManagedText(element) ?? currentText;
 
   if (options?.submitEditing === true) {
     await wait();
@@ -70,7 +43,7 @@ export async function type(
       element,
       'submitEditing',
       type,
-      EventBuilder.TextInput.submitEditing(currentText)
+      EventBuilder.TextInput.submitEditing(finalText)
     );
   }
 
@@ -79,11 +52,51 @@ export async function type(
     element,
     'endEditing',
     type,
-    EventBuilder.TextInput.endEditing(currentText)
+    EventBuilder.TextInput.endEditing(finalText)
   );
   invokeEvent(element, 'blur', undefined, EventBuilder.Common.blur());
 }
 
+async function emitSingleLineTypingEvents(
+  element: ReactTestInstance,
+  key: string,
+  currentText: string
+) {
+  await wait();
+  invokeEvent(element, 'keyPress', type, EventBuilder.TextInput.keyPress(key));
+
+  // TODO: consider whether to emit these for single line inputs
+  // invokeEvent(
+  //   element,
+  //   'textInput',
+  //   type,
+  //   EventBuilder.TextInput.textInput(currentText, previousText)
+  // );
+
+  invokeEvent(
+    element,
+    'change',
+    type,
+    EventBuilder.TextInput.change(currentText)
+  );
+
+  invokeEvent(element, 'changeText', type, currentText);
+
+  invokeEvent(
+    element,
+    'selectionChange',
+    type,
+    EventBuilder.TextInput.selectionChange(
+      currentText.length,
+      currentText.length
+    )
+  );
+}
+
 export function parseKeys(text: string) {
   return text.split('');
+}
+
+function getManagedText(element: ReactTestInstance) {
+  return element.props.value ?? element.props.defaultValue;
 }

@@ -16,10 +16,10 @@ function renderTextInputWithToolkit() {
       onPressOut={handleEvent('pressOut')}
       onChange={handleEvent('change')}
       onChangeText={handleEvent('changeText')}
-      onTextInput={handleEvent('textInput')}
       onKeyPress={handleEvent('keyPress')}
       onSelectionChange={handleEvent('selectionChange')}
       onSubmitEditing={handleEvent('submitEditing')}
+      onEndEditing={handleEvent('endEditing')}
       onContentSizeChange={handleEvent('contentSizeChange')}
     />
   );
@@ -41,17 +41,14 @@ test('userEvent.type on TextInput', async () => {
     'focus',
     'pressOut',
     'keyPress',
-    'textInput',
     'change',
     'changeText',
     'selectionChange',
     'keyPress',
-    'textInput',
     'change',
     'changeText',
     'selectionChange',
     'keyPress',
-    'textInput',
     'change',
     'changeText',
     'selectionChange',
@@ -74,7 +71,6 @@ test('userEvent.type skips press events when `skipPress: true`', async () => {
   expect(eventNames).toEqual([
     'focus',
     'keyPress',
-    'textInput',
     'change',
     'changeText',
     'selectionChange',
@@ -97,7 +93,6 @@ test('userEvent.type triggers submit event with `submitEditing: true`', async ()
     'focus',
     'pressOut',
     'keyPress',
-    'textInput',
     'change',
     'changeText',
     'selectionChange',
